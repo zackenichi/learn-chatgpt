@@ -1,10 +1,13 @@
 import { Container, Grid } from '@mui/material';
-import React from 'react';
+import AppTitle from './AppTitle';
 
 const Layout = (props) => {
   return (
     <Container maxWidth="sm">
       <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <AppTitle />
+        </Grid>
         <Grid item xs={12}>
           {props.children}
         </Grid>
