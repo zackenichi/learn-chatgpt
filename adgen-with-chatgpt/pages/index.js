@@ -12,21 +12,57 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showError, setShowError] = useState(false);
 
+  const handleTest = async () => {
+    const animalInput = urlRef.current.value;
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post('/api/test-chatgpt', {
+        animal: animalInput,
+      });
+
+      const data = response.data;
+      if (response.status !== 200) {
+        throw (
+          data.error ||
+          new Error(`Request failed with status ${response.status}`)
+        );
+      }
+
+      setIsLoading(false);
+      console.dir(data.result, { depth: null });
+    } catch (error) {
+      // Consider implementing your own error handling logic here
+      console.error(error);
+      alert(error.message);
+      setIsLoading(false);
+    }
+  };
+
   const handleScrape = async () => {
     const urlInput = urlRef.current.value;
     setIsLoading(true);
 
     if (isValidUrl(urlInput)) {
       try {
-        // make sure input is in proper format
-        const encodedUrl = encodeURIComponent(addHttpToUrl(urlInput));
+        // Make sure input is in proper format
+        // const encodedUrl = encodeURIComponent(addHttpToUrl(urlInput));
 
-        const scrapeResponse = await axios.get(
-          `/api/get-page-text?baseUrl=${encodedUrl}`
-        );
+        // Fetch ad headline and body using the API route
+        // const scrapeResponse = await axios.get(
+        //   `/api/generate-headlines?baseUrl=${encodedUrl}`
+        // );
 
-        setSiteData(scrapeResponse.data);
+        // const { adHeadline, adBody } = scrapeResponse.data;
+
+        // const { adHeadline } = scrapeResponse.data;
+
+        // setSiteData(scrapeResponse.data);
         setIsLoading(false);
+
+        // Do something with the generated ad headline and body
+        // console.log('Ad Headline:', adHeadline);
+        // console.log('Ad Body:', adBody);
       } catch (error) {
         console.error('Error:', error.message);
         setIsLoading(false);
@@ -50,7 +86,11 @@ export default function HomePage() {
     <Fragment>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Search urlRef={urlRef} onScrape={handleScrape} />
+          <Search
+            urlRef={urlRef}
+            // onScrape={handleScrape}
+            onScrape={handleTest}
+          />
         </Grid>
         {siteData.length > 0 && (
           <Grid item xs={12}>
