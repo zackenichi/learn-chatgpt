@@ -2,7 +2,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Button } from '@mui/material';
 
-const ResultsControls = () => {
+const ResultsControls = ({ handleClear }) => {
   return (
     <Box>
       <Button
@@ -25,6 +25,7 @@ const ResultsControls = () => {
         Generate New
       </Button>
       <Button
+        onClick={handleClear}
         sx={{
           marginLeft: '10px',
           background: '#621984',
