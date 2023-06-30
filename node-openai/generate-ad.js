@@ -44,11 +44,16 @@ const getHtml = async (url) => {
   }
 };
 
+// qualify prompts
+
 const generatePrompt = (content) => {
-  const prompt = `Generate an ad headline and copy for a Google Ads campaign. Based on the provided content.
+  const prompt = `Generate an exciting and unique ad headline and copy for a Google Ads campaign. Based on the provided content: 
+    
+    \`\`\`${content}\`\`\`
   
-  Text: "${content}"
-  `;
+    Headline:
+    Copy:
+    `;
 
   return prompt;
 };
@@ -80,7 +85,8 @@ const generateHeadlines = async (siteContent) => {
 
 const contentGeneration = async () => {
   try {
-    const websiteUrl = 'https://www.sgsmiles.com/';
+    // const websiteUrl = 'https://www.sgsmiles.com/';
+    const websiteUrl = 'https://clermontpediatricdentistry.com/';
     const extractedText = await getHtml(websiteUrl);
     const generatedChoices = await generateHeadlines(extractedText);
 
@@ -90,10 +96,19 @@ const contentGeneration = async () => {
       // Extracting headline and copy from the generated text
       const [headline, copy] = text.split('Copy:');
 
+      // Removing "Headline:" prefix and quotes from the headline
+      const cleanHeadline = headline
+        .replace(/^Headline:\s*/, '')
+        .replace(/['"]+/g, '')
+        .replace(/\n/g, '');
+
+      // Removing quotes and \n from the copy
+      const cleanCopy = copy.trim().replace(/['"]+/g, '').replace(/\n/g, '');
+
       // Creating an object with the extracted headline and copy
       return {
-        headline: headline.trim(),
-        copy: copy.trim(),
+        headline: cleanHeadline,
+        copy: cleanCopy,
       };
     });
 
